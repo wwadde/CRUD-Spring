@@ -1,12 +1,12 @@
 package com.Spring.springboot.domain;
 
-public class Cliente {
+public class Usuario {
 
     private int id;
     private String username;
     private String email;
 
-    public Cliente(int id, String username, String email) {
+    public Usuario(int id, String username, String email) {
         this.id = id;
         this.username = username;
         this.email = email;
