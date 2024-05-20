@@ -1,69 +1,71 @@
 package com.Spring.springboot.controller;
 
 import com.Spring.springboot.domain.Usuario;
+import com.Spring.springboot.services.UsuariosServiceIMPL;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import java.net.URI;
+import java.util.Optional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+@Slf4j
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioRestController {
 
-    private List<Usuario> lista = new ArrayList<>(Arrays.asList(
-            new Usuario(1,"william","william@gmail.com"),
-            new Usuario(2,"orlando","orlando@gmail.com"),
-            new Usuario(3,"daniel","daniel@gmail.com"),
-            new Usuario(4,"brayan","brayan@gmail.com"),
-            new Usuario(5,"juan","juan@gmail.com"),
-            new Usuario(6,"ruslan","ruslan@gmail.com"),
-            new Usuario(7,"marina","marina@gmail.com"),
-            new Usuario(8,"angela","angela@gmail.com"),
-            new Usuario(9,"karen","karen@gmail.com"),
-            new Usuario(10,"veratriz","veratriz@gmail.com")
-    ));
+    @Autowired
+    private UsuariosServiceIMPL usuarioService;
 
     @GetMapping()
-    public List<Usuario> getLista() {
-        return lista;
+    public ResponseEntity<?> getLista() {
+        return ResponseEntity.ok(usuarioService.getUsuarios());
     }
 
-
-
-
     @GetMapping("{id}")
-    public Usuario getUsuario(@PathVariable int id) {
-        return lista.stream().filter(cliente -> cliente.getId() == id).findFirst().orElseThrow();
+    public ResponseEntity<?> getUsuario(@PathVariable int id) {
+        try {
+            Usuario usuarioEncontrado = usuarioService.getUsuario(id);
+            return ResponseEntity.ok(usuarioEncontrado);
+        } catch (Exception e) {
+            log.info("No se encontro el usuario con id: {}", id);
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping()
-    public String postUsuario(@RequestBody Usuario usuario) {
-
-        lista.add(usuario);
-        return "Usuario agregado con exito";
+    public ResponseEntity<?> postUsuario(@RequestBody Usuario usuario) {
+        if (usuarioService.addUsuario(usuario)) {
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(usuario.getId())
+                    .toUri();
+            usuarioService.addUsuario(usuario);
+            return ResponseEntity.created(location).body(usuario);
+        }
+        log.error("No se pudo agregar el usuario");
+        return ResponseEntity.badRequest().build();
     }
 
     @PutMapping()
-    public String putUsuario(@RequestBody Usuario usuario) {
-        Usuario usuarioEncontrado = lista.stream().filter(user -> user.getUsername().equalsIgnoreCase(user.getUsername())).findFirst().orElseThrow();
-        usuarioEncontrado.setEmail(usuario.getEmail());
-        usuarioEncontrado.setUsername(usuario.getUsername());
-        return usuarioEncontrado.getUsername() + " actualizado con exito";
-
-
+    public ResponseEntity<?> putUsuario(@RequestBody Usuario usuario) {
+        Usuario usuarioActualizado = usuarioService.updateUsuario(usuario);
+        if (usuarioActualizado != null) {
+            return ResponseEntity.ok(usuarioActualizado);
+        }
+        log.warn("No se pudo actualizar el usuario");
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("{id}")
-    public String deleteCliente(@PathVariable int id) {
-
-        try{
-        Usuario usuarioEncontrado = lista.stream().filter(usuario -> usuario.getId() == id).findFirst().orElseThrow();
-        lista.remove(usuarioEncontrado);
-        return usuarioEncontrado.getUsername() + " Eliminado con exito";
-        }catch (Exception e){
-            return "Usuario no encontrado";
+    public ResponseEntity<?> deleteUsuario(@PathVariable int id) {
+        Optional usuario = usuarioService.deleteUsuario(id);
+        if (usuario.isPresent()){
+            return ResponseEntity.ok(usuario.get());
         }
+        log.error("No se pudo eliminar el usuario con id: {}", id);
+        return ResponseEntity.notFound().build();
     }
 
 
