@@ -62,9 +62,11 @@ public class UsuariosServiceIMPL {
                 .filter(usu -> usu.getId() == id)
                 .findFirst();
 //        if (usuario.isPresent()) {
+
+
 //            lista.remove(usuario.get());
 //        }
-        usuario.ifPresent(value -> System.out.println("Usuario eliminado: " + value));
+        usuario.ifPresent(value -> lista.remove(value));
         return usuario;
     }
 }

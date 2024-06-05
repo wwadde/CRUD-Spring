@@ -37,11 +37,13 @@ public class ProductosServiceIMPL {
     }
 
     public boolean addProducto(Producto producto) {
+
+        if (producto.getId() == null) {
+            producto.setId(productos.size() + 1);
+        }
+
         if (producto.getNombre() != null && producto.getPrecio() != null && producto.getStock() != null) {
 
-            if (producto.getId() == null) {
-                producto.setId(productos.size() + 1);
-            }
             return productos.add(producto);
         }
         return false;

@@ -49,7 +49,6 @@ public class ProductoRestController {
                     .path("/{id}")
                     .buildAndExpand(producto.getId())
                     .toUri();
-            productosService.addProducto(producto);
             return ResponseEntity.created(location).body(producto);
         }
         return ResponseEntity.badRequest().build();

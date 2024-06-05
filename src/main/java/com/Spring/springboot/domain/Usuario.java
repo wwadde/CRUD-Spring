@@ -2,9 +2,7 @@ package com.Spring.springboot.domain;
 
 import lombok.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
 public class Usuario {
 
