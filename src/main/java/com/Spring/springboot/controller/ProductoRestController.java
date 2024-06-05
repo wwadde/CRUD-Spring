@@ -43,7 +43,8 @@ public class ProductoRestController {
     @PostMapping
     public ResponseEntity<?> postProducto(@RequestBody Producto producto) {
 
-        if (productosService.addProducto(producto)) {
+        Producto productoExiste = productosService.addProducto(producto);
+        if (productoExiste != null) {
 
             URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("/{id}")
@@ -68,11 +69,9 @@ public class ProductoRestController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteProducto(@PathVariable int id) {
-        Optional producto = productosService.deleteProducto(id);
-        if (producto.isPresent()){
-            return ResponseEntity.ok(producto.get());
-        }
-        log.error("No se pudo eliminar el producto con id: {}", id);
-        return ResponseEntity.notFound().build();
+        productosService.deleteProducto(id);
+
+            return ResponseEntity.ok().build();
+
     }
 }
