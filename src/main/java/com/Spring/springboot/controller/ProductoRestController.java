@@ -48,7 +48,7 @@ public class ProductoRestController {
                 .buildAndExpand(producto.getId())
                 .toUri();
         // Uso del metodo en lugar del constructor
-        return ResponseEntity.status(HttpStatus.CREATED).location(location).body(producto);
+        return ResponseEntity.status(HttpStatus.CREATED).location(location).body(savedProducto);
     }
 
     @PutMapping
