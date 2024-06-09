@@ -1,6 +1,6 @@
-package com.Spring.springboot.persistance.repositories;
+package com.Spring.springboot.persistence.repositories;
 
-import com.Spring.springboot.persistance.entities.ClienteEntity;
+import com.Spring.springboot.persistence.entities.ClienteEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

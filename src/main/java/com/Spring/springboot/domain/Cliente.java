@@ -4,10 +4,12 @@ import lombok.*;
 
 @Data
 @AllArgsConstructor
-public class Usuario {
+@NoArgsConstructor
+public class Cliente {
 
-    private int id;
+    private Integer id;
     private String username;
-    private String email;
+    private String password;
+    private String nombre;
 
 }
