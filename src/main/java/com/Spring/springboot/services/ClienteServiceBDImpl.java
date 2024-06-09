@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service("BD")
+@Service("BDCliente")
 @ConditionalOnProperty(
         value = "clientes.estrategia",
         havingValue = "EN_BD")
@@ -68,7 +68,7 @@ public class ClienteServiceBDImpl implements ClienteService {
         dto.setId(entity.getId());
         dto.setUsername(entity.getUsername());
         dto.setPassword(entity.getPassword());
-        dto.setUsername(entity.getUsername());
+        dto.setNombre(entity.getNombre());
         return dto;
     }
 
