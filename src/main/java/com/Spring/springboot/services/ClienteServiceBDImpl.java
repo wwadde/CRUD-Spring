@@ -17,8 +17,12 @@ import java.util.stream.Collectors;
         havingValue = "EN_BD")
 public class ClienteServiceBDImpl implements ClienteService {
 
-    @Autowired
-    private ClientesRepository clientesRepository;
+
+    private final ClientesRepository clientesRepository;
+
+    public ClienteServiceBDImpl(ClientesRepository clientesRepository) {
+        this.clientesRepository = clientesRepository;
+    }
 
 
     @Override
@@ -31,6 +35,12 @@ public class ClienteServiceBDImpl implements ClienteService {
     public Cliente findClienteById(Integer id) {
         Optional<ClienteEntity> optionalEntity = clientesRepository.findById(id);
         return optionalEntity.map(this::mapToDto).orElse(null);
+    }
+
+    @Override
+    public List<Cliente> findClienteByUsername(String username) {
+        List<ClienteEntity> entities = clientesRepository.findByUsername(username);
+        return entities.stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
     @Override

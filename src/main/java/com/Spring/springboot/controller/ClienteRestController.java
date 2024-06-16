@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -73,6 +75,17 @@ public class ClienteRestController {
         }
         return new ResponseEntity<>(clienteBorrado, HttpStatus.OK);
 
+    }
+
+    @GetMapping(params = "username")
+    public ResponseEntity<?> getClienteByUsername(@RequestParam(value = "username") String username) {
+        List<Cliente> clientes = clienteService.findClienteByUsername(username);
+
+        if (clientes.isEmpty()) {
+            log.warn("GET: Cliente con username {} no encontrado", username);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(clientes, HttpStatus.OK);
     }
 
 }
